@@ -52,7 +52,7 @@ class file_parser
 	boost::interprocess::mapped_region region;
 	parser p;
 public:
-	file_parser(const char* filename):mfile(filename,boost::interprocess::read_write),region(mfile,boost::interprocess::read_write),p(region.get_address(),region.get_size())
+	file_parser(const char* filename):mfile(filename,boost::interprocess::read_write),region(mfile,boost::interprocess::read_write),p(static_cast<std::uint8_t*>(region.get_address()),region.get_size())
 	{
 	}
 
@@ -74,12 +74,12 @@ public:
 	template<typename T>
 	auto next_n(std::size_t n)
 	{
-		return p.next_n<T>();
+		return p.next_n<T>(n);
 	}
 	template<typename T>
 	auto at_n(std::size_t n)
 	{
-		return p.at_n<T>();
+		return p.at_n<T>(n);
 	}
 };
 

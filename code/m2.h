@@ -42,7 +42,7 @@ namespace m2
 		std::vector<std::any> chunks;
 		auto next_chunk()
 		{
-			return f.at_n<std::uint8_t>(f.next<std::uint32_t>());
+			return f.at_n<std::uint8_t>(*f.next<std::uint32_t>());
 		}
 	public:
 		m2(const char* filename):f(filename)

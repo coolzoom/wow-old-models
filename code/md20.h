@@ -3,6 +3,7 @@
 #include<array>
 #include<chrono>
 #include<stdexcept>
+#include"file_parser.h"
 
 namespace m2
 {
@@ -200,10 +201,24 @@ namespace m2
 			float near_clip;
 			track<spline_key<common_types::vector3>> target_position;
 			common_types::vector3 target_position_base;
-			track<spline_key<float>> target_position;
+			track<spline_key<float>> roll;
 			track<spline_key<float>> fov;
 		};
-
+		
+		struct light
+		{
+			std::uint16_t type;
+			std::int16_t bone;
+			common_types::vector3 position;
+			track<common_types::vector3> ambient_color;
+			track<float> ambient_intensity;
+			track<common_types::vector3> diffuse_color;
+			track<float> diffuse_intensity;
+			track<float> attenuation_start;
+			track<float> attenuation_end;
+			track<std::uint8_t> visibility;
+		};
+		
 		struct ribbon
 		{
 			std::uint32_t id;
@@ -302,10 +317,23 @@ namespace m2
 		{
 			using namespace std::string_literals;
 			parser p(m.begin(),m.end());
-			hd = p.at<md20::header>;
+			hd = p.at<md20::header>();
 			if(hd->magic!=0x3032444D)
-				throw std::runtime_error("not a md20 block"s+std::to_string(hd.magic));
+			{
+				union
+				{
+					std::uint32_t u;
+					std::array<char,4> a;
+				}mg{hd->magic};
+				throw std::runtime_error("not a md20 block : "s+std::to_string(mg.u)+"\t"+std::string(mg.a.begin(),mg.a.end()));
+			}
 		}
+		
+		decltype(auto) head() const
+		{
+			return *hd;
+		}
+		
 		template<typename T>
 		auto deref(md20::iterator<T> i)
 		{
