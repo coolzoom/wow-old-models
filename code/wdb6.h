@@ -56,22 +56,6 @@ namespace db2
 			rcd = f.at_n<record_type>(pheader->record_count);
 			strn = f.at_n<char>(pheader->string_table_size);
 		}
-		decltype(auto) get_header()
-		{
-			return *pheader;
-		}
-		decltype(auto) field_structures()
-		{
-			return filedst;
-		}
-		decltype(auto) cstring()
-		{
-			return strn;
-		}
-		decltype(auto) records()
-		{
-			return rcd;
-		}
 		
 		decltype(auto) get_header() const
 		{
