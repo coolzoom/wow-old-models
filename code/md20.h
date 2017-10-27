@@ -50,6 +50,12 @@ namespace m2
 			std::uint32_t timestamp;
 		};
 		
+		template<typename ostrm>
+		decltype(auto) operator<<(ostrm &os,const loop &p)
+		{
+			return os<<p.timestamp;
+		}
+		
 		struct range
 		{
 			uint32_t minimum;
@@ -65,25 +71,32 @@ namespace m2
 		struct sequence
 		{
 			std::uint16_t id;                   // Animation id in AnimationData.dbc
-			std::uint16_t variationIndex;       // Sub-animation id: Which number in a row of animations this one is.
+			std::uint16_t variation_index;       // Sub-animation id: Which number in a row of animations this one is.
 			std::uint32_t duration;             // The length of this animation sequence in milliseconds.
 			float movespeed;               // This is the speed the character moves with in this animation.
 			std::uint32_t flags;                // See below.
 			std::int16_t frequency;             // This is used to determine how often the animation is played. For all animations of the same type, this adds up to 0x7FFF (32767).
-			std::uint16_t _padding;
+			std::uint16_t padding;
 			range replay;
-			std::uint16_t blendTimeIn;          // The client blends (lerp) animation states between animations where the end and start values differ. This specifies how long that blending takes. Values: 0, 50, 100, 150, 200, 250, 300, 350, 500.
-			std::uint16_t blendTimeOut;         // The client blends between this sequence and the next sequence for blendTimeOut milliseconds.
+			std::uint16_t blend_time_in;          // The client blends (lerp) animation states between animations where the end and start values differ. This specifies how long that blending takes. Values: 0, 50, 100, 150, 200, 250, 300, 350, 500.
+			std::uint16_t blend_time_out;         // The client blends between this sequence and the next sequence for blendTimeOut milliseconds.
 									// For both blendTimeIn and blendTimeOut, the client plays both sequences simultaneously while interpolating between their animation transforms.
 			bounds bounds;
-			std::int16_t variationNext;         // id of the following animation of this AnimationID, points to an Index or is -1 if none.
-			std::uint16_t aliasNext;            // id in the list of animations. Used to find actual animation if this sequence is an alias (flags & 0x40)
+			std::int16_t variation_next;         // id of the following animation of this AnimationID, points to an Index or is -1 if none.
+			std::uint16_t alias_next;            // id in the list of animations. Used to find actual animation if this sequence is an alias (flags & 0x40)
 		};
+		
+		template<typename ostrm>
+		decltype(auto) operator<<(ostrm &os,const sequence &p)
+		{
+			return os<<p.id;
+		}
 		
 		struct track_base
 		{
 			std::uint16_t interpolation_type;
 			std::uint16_t global_sequence;
+			iterator<iterator<std::uint32_t>> timestamps;
 		};
 		
 		template<typename T>
@@ -136,7 +149,7 @@ namespace m2
 			std::uint32_t flags;
 			std::int16_t parent_bone;
 			std::uint16_t submesh_id;
-			union
+/*			union
 			{
 				struct
 				{
@@ -144,12 +157,19 @@ namespace m2
 					std::uint16_t u_z_ratio_of_chain;
 				} compress_data;
 				std::uint32_t bone_name_crc;         // these are for debugging only. their bone names match those in key bone lookup.
-			};
+			}u;*/
+			std::uint32_t unknown;
 			track<common_types::vector3> translation;
 			track<void> rotation;
 			track<common_types::vector3> scale;
 			common_types::vector3 pivot;
 		};
+		
+		template<typename ostrm>
+		decltype(auto) operator<<(ostrm& os,const compbone &c)
+		{
+			return os<<c.key_bone_id;
+		}
 		
 		struct vertex
 		{
@@ -240,38 +260,75 @@ namespace m2
 			std::int16_t priority_plane;
 			std::uint16_t padding;
 		};
-
+		
+		class version
+		{
+			std::uint32_t v;
+		public:
+			decltype(auto) get() const
+			{
+				return v;
+			}
+			decltype(auto) get()
+			{
+				return v;
+			}
+		};
+		template<typename ostrm>
+		decltype(auto) operator<<(ostrm& os,const version& v)
+		{
+			auto val(v.get());
+			switch(val)
+			{
+				case 264:
+					return os<<"Wrath of the Lich King";
+				case 272:
+					return os<<"Mists of Pandaria";
+				case 273:
+					return os<<"Warlords of Draenor";
+				case 274:
+					return os<<"Legion";
+				default:
+					if(val<256)
+						return os<<"Classic ("<<val<<')';
+					else if(260<val&&val<264)
+						return os<<"The Burning Crusade ("<<val<<')';
+					else if(264<val&&val<272)
+						return os<<"Cataclysm ("<<val<<')';
+					else
+						return os<<"Unknown Expansion ("<<val<<')';
+			}
+		}
 		struct header
 		{
 			std::uint32_t magic;
-			std::uint32_t version;
+			version vers;
 			iterator<char> name;
-/*			struct
+			struct
 			{
-				std::uint32_t flag_tilt_x : 1;
-				std::uint32_t flag_tilt_y : 1;
+				std::uint32_t flag_tilt_x: 1;
+				std::uint32_t flag_tilt_y: 1;
 				std::uint32_t : 1;
-				std::uint32_t flag_use_texture_combiner_combos : 1;
+				std::uint32_t flag_use_texture_combiner_combos: 1;
 				std::uint32_t : 1;
-				std::uint32_t flag_load_phys_data : 1;
+				std::uint32_t flag_load_phys_data : 1;
 				std::uint32_t : 1;
-				std::uint32_t flag_unk_0x80 : 1;  
-				std::uint32_t flag_camera_related : 1;
+				std::uint32_t flag_unk_0x80: 1;  
+				std::uint32_t flag_camera_related: 1;
 				std::uint32_t flag_new_particle_record: 1;
 				std::uint32_t flag_unk_0x400 : 1;
-				std::uint32_t flag_texture_transforms_use_bone_sequences : 1;
-				std::uint32_t flag_unk_0x1000 : 1;
-				std::uint32_t flag_unk_0x2000 : 1;
-				std::uint32_t flag_unk_0x4000 : 1;
-				std::uint32_t flag_unk_0x8000 : 1;
-				std::uint32_t flag_unk_0x10000 : 1;
-				std::uint32_t flag_unk_0x20000 : 1;
-				std::uint32_t flag_unk_0x40000 : 1;
-				std::uint32_t flag_unk_0x80000 : 1;
-				std::uint32_t flag_unk_0x100000 : 1;
-				std::uint32_t flag_unk_0x200000 : 1;// apparently: use 24500 upgraded model format: chunked .anim files, change in the exporter reordering sequence+bone blocks before name
-			}flags;*/
-			std::uint32_t flag;
+				std::uint32_t flag_texture_transforms_use_bone_sequences: 1;
+				std::uint32_t flag_unk_0x1000: 1;
+				std::uint32_t flag_unk_0x2000: 1;
+				std::uint32_t flag_unk_0x4000: 1;
+				std::uint32_t flag_unk_0x8000: 1;
+				std::uint32_t flag_unk_0x10000: 1;
+				std::uint32_t flag_unk_0x20000: 1;
+				std::uint32_t flag_unk_0x40000: 1;
+				std::uint32_t flag_unk_0x80000: 1;
+				std::uint32_t flag_unk_0x100000: 1;
+				std::uint32_t flag_unk_0x200000: 1;// apparently: use 24500 upgraded model format: chunked .anim files, change in the exporter reordering sequence+bone blocks before name
+			}flags;
 			
 			iterator<loop> loops;
 			iterator<sequence> sequences;
@@ -284,11 +341,12 @@ namespace m2
 			iterator<texture> textures;
 			iterator<texture_weight> texture_weights;
 			iterator<texture_transform> texture_transforms;
-			iterator<std::uint16_t> replace_texture_lookup;
+			iterator<std::uint16_t> replacable_texture_lookup;
 			iterator<material> materials;
 			
 			iterator<std::uint16_t> bone_lookup_table;
-			iterator<std::uint16_t> tex_uint_lookup_table;
+			iterator<std::uint16_t> texture_lookup_table;
+			iterator<std::uint16_t> tex_unit_lookup_table;
 			iterator<std::uint16_t> transparency_lookup_table;
 			iterator<std::uint16_t> texture_transforms_lookup_table;
 			
@@ -307,6 +365,7 @@ namespace m2
 			iterator<void> particle_emitters;
 		};
 	}
+	
 	
 	class md21
 	{
@@ -334,10 +393,52 @@ namespace m2
 			return *hd;
 		}
 		
+		auto size() const
+		{
+			return m.size();
+		}
+		
 		template<typename T>
-		auto deref(md20::iterator<T> i)
+		auto operator[](const md20::iterator<T> &i)
 		{
 			return span<T>(m.begin()+i.offset_elements,i.number);
 		}
+		
+		template<typename T>
+		auto operator[](const md20::iterator<T> &i) const
+		{
+			return span<const T>(m.cbegin()+i.offset_elements,i.number);
+		}
+		
+		template<typename T>
+		auto at(const md20::iterator<T> &i)
+		{
+			if(i.offset_elements+i.number*sizeof(T)<size())
+				return operator[](i);
+			throw std::out_of_range("md20 iterator out of range");
+		}
+		
+		template<typename T>
+		auto at(const md20::iterator<T> &i) const
+		{
+			if(i.offset_elements+i.number*sizeof(T)<size())
+				return operator[](i);
+			throw std::out_of_range("md20 iterator out of range");
+		}
 	};
+	
+	template<typename ostrm>
+	decltype(auto) operator<<(ostrm& os,const md21& v)
+	{
+		os<<"MD21\t"<<v.size()<<" bytes\t"<<v.head().vers<<'\t';
+		auto s(v.at(v.head().name));
+		if(s.back())
+			os.rdbuf()->sputn(s.data(),s.size());
+		else
+			os<<s.data();
+		if(v.head().flags.flag_unk_0x200000)
+			os<<'\t'<<"(24500 upgraded model format)";
+		return (os);
+	}
+	
 }

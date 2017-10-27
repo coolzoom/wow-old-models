@@ -44,6 +44,11 @@ public:
 			throw std::out_of_range("at_n<T>() out of range");
 		return next_n<T>(n);
 	}
+	
+	void clear() noexcept
+	{
+		iptr=end=nullptr;
+	}
 };
 
 class file_parser
@@ -80,6 +85,10 @@ public:
 	auto at_n(std::size_t n)
 	{
 		return p.at_n<T>(n);
+	}
+	void clear() noexcept
+	{
+		p.clear();
 	}
 };
 

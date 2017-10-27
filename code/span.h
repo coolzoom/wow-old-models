@@ -11,7 +11,10 @@ class span
 	T *b,*e;
 public:
 	span()=default;
-	span(auto _b,auto _e):b(reinterpret_cast<T*>(_b)),e(reinterpret_cast<T*>(_e)){}
+	template<typename X>
+	span(X *_b,X *_e):b((T*)(_b)),e((T*)(_e)){}
+	template<typename X>
+	span(X *_b,std::size_t s):b((T*)(_b)),e(b+s){}
 	typedef T value_type;
 	typedef value_type* pointer;
 	typedef const value_type* const_pointer;
@@ -77,6 +80,17 @@ public:
 		swap(b,other.b);
 		swap(e,other.e);
 	}
+	
+	T* data() noexcept
+	{
+		return b;
+	}
+	
+	const T* data() const noexcept
+	{
+		return b;
+	}
+	
 	const_iterator begin() const noexcept
 	{
 		return b;
