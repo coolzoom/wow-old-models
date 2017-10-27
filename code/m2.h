@@ -46,23 +46,27 @@ namespace m2
 		template<typename T,typename ...Args>
 		chunk(std::in_place_type_t<T>,Args&& ...args):u(new derv<T>(std::forward<Args>(args)...)){}
 		
-		template<typename T>
-		T& get()
-		{
-			return dynamic_cast<derv<T>*>(u)->t;
-		}
-		
-		template<typename T>
-		const T& get() const
-		{
-			return dynamic_cast<const derv<T>*>(u)->t;
-		}
-		
 		const std::type_info& type() const noexcept
 		{
 			return u->type();
 		}
 		
+		template<typename T>
+		T& get()
+		{
+			if(type()==typeid(T))
+				return static_cast<derv<T>*>(u)->t;
+			throw std::bad_cast();
+		}
+		
+		template<typename T>
+		const T& get() const
+		{
+			if(type()==typeid(T))
+				return static_cast<const derv<T>*>(u)->t;
+			throw std::bad_cast();
+		}
+
 		~chunk()
 		{
 			delete u;
@@ -169,6 +173,18 @@ namespace m2
 			throw std::logic_error("md file does not have this type");
 		}
 		
+
+		
+		template<typename T>
+		decltype(auto) get() const
+		{
+			for(auto &ele : chunks)
+				if(ele.type()==typeid(T))
+					return ele.get<T>();
+			throw std::logic_error("md file does not have this type");
+		}
+		
+
 		template<typename T>
 		auto gets()
 		{
@@ -178,16 +194,6 @@ namespace m2
 					vec.emplace_back(ele.get<T>());
 			return vec;
 		}
-		
-		template<typename T>
-		decltype(auto) get() const
-		{
-			for(auto &ele : chunks)
-				if(ele.type()==typeid(T))
-					return ele.get<const T>();
-			throw std::logic_error("md file does not have this type");
-		}
-		
 		template<typename T>
 		auto gets() const
 		{

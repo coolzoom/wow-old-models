@@ -15,11 +15,13 @@ int main(int argc,char **argv)
 		const m2::m2 p(argv[1]);
 		std::cout<<p<<'\n';
 		decltype(auto) md21(p.get<m2::md21>());
-		auto sp(md21.at(md21.head().bones));
-		std::cout<<sp.size()<<'\n';
-		for(const auto &ele : sp)
+		decltype(auto) m(md21.at(md21.head().bones));
+		std::cout<<m.size()<<'\n';
+		std::size_t i(0);
+		for(const auto &ele : m)
 		{
-			std::cout<<ele<<'\n';
+			std::cout<<i<<' '<<ele<<'\n';
+			++i;
 		}
 	}
 	catch(const std::exception& ex)

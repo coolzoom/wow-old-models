@@ -118,13 +118,12 @@ namespace m2
 	{
 		return os<<"TXAC\tstd::array<std::array<char,2>,"<<v.blocks().size()<<">\t"<<v.entire().size()<<" bytes";
 	}
-	
+		
 	class sfid
 	{
 		span<std::uint8_t> tot;
 		span<std::uint32_t> s;
 	public:
-		using value_type = std::array<std::uint32_t,2>;
 		sfid(const md21& m,span<std::uint8_t> sp):tot(sp),s(tot.begin(),m.head().num_skin_profiles){}
 		
 		decltype(auto) blocks()

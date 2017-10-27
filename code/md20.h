@@ -22,6 +22,13 @@ namespace m2
 				float y;
 				float z;
 			};
+			
+			template<typename ostrm>
+			decltype(auto) operator<<(ostrm &out,vector3 v)
+			{
+				return out<<"x:"<<v.x<<",y:"<<v.y<<",z:"<<v.z;
+			}
+			
 			struct vector4
 			{
 				float x;
@@ -167,7 +174,17 @@ namespace m2
 		template<typename ostrm>
 		decltype(auto) operator<<(ostrm& os,const compbone &c)
 		{
-			return os<<c.key_bone_id;
+			if(c.key_bone_id==-1)
+			{
+				if(c.parent_bone==-1)
+					os<<"independent bone";
+				else
+					os<<"parent bone is "<<c.parent_bone;
+			}
+			else
+				os<<c.key_bone_id;
+			
+			return os<<"\tpivot("<<c.pivot<<")\t";
 		}
 		
 		struct vertex
@@ -199,6 +216,12 @@ namespace m2
 			common_types::vector3 position;
 			track<std::uint8_t> animate_attached;
 		};
+		
+		template<typename ostrm>
+		decltype(auto) operator<<(ostrm& os,const attachment &c)
+		{
+			return os<<"id "<<c.id<<"\tbone "<<c.bone;
+		}
 		
 		struct event
 		{
@@ -349,6 +372,8 @@ namespace m2
 			iterator<std::uint16_t> transparency_lookup_table;
 			iterator<std::uint16_t> texture_transforms_lookup_table;
 			
+			common_types::aa_box bounding_box;
+			float bounding_sphere_radius;
 			common_types::aa_box collision_box;
 			float collision_sphere_radius;
 			iterator<std::uint16_t> collision_triangles;
