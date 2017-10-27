@@ -149,7 +149,7 @@ namespace m2
 			std::uint32_t flags;
 			std::int16_t parent_bone;
 			std::uint16_t submesh_id;
-/*			union
+			union
 			{
 				struct
 				{
@@ -157,10 +157,9 @@ namespace m2
 					std::uint16_t u_z_ratio_of_chain;
 				} compress_data;
 				std::uint32_t bone_name_crc;         // these are for debugging only. their bone names match those in key bone lookup.
-			}u;*/
-			std::uint32_t unknown;
+			};
 			track<common_types::vector3> translation;
-			track<void> rotation;
+			track<std::array<std::uint16_t,4>> rotation;
 			track<common_types::vector3> scale;
 			common_types::vector3 pivot;
 		};
