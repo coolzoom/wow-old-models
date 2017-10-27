@@ -5,10 +5,9 @@
 #include<boost/interprocess/mapped_region.hpp>
 #include"span.h"
 
-class parser
+struct parser
 {
 	std::uint8_t *iptr,*end;
-public:
 	parser(std::uint8_t* b,std::size_t s):iptr(b),end(b+s){}
 	parser(std::uint8_t* b,std::uint8_t* e):iptr(b),end(e){}
 	template<typename T>
@@ -55,8 +54,9 @@ class file_parser
 {
 	boost::interprocess::file_mapping mfile;
 	boost::interprocess::mapped_region region;
-	parser p;
+	
 public:
+	parser p;
 	file_parser(const char* filename):mfile(filename,boost::interprocess::read_write),region(mfile,boost::interprocess::read_write),p(static_cast<std::uint8_t*>(region.get_address()),region.get_size())
 	{
 	}

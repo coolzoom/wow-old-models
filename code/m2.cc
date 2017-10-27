@@ -13,14 +13,14 @@ int main(int argc,char **argv)
 			return 1;
 		}
 		const m2::m2 p(argv[1]);
-		std::cout<<p<<'\n';
+//		std::cout<<p<<'\n';
 		decltype(auto) md21(p.get<m2::md21>());
 		decltype(auto) m(md21.at(md21.head().bones));
 		std::cout<<m.size()<<'\n';
 		std::size_t i(0);
 		for(const auto &ele : m)
 		{
-			std::cout<<i<<' '<<ele<<'\n';
+			std::cout<<ele<<'\n';
 			++i;
 		}
 	}

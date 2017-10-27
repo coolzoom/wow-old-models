@@ -4,6 +4,7 @@
 #include<chrono>
 #include<stdexcept>
 #include"file_parser.h"
+#include<bitset>
 
 namespace m2
 {
@@ -24,9 +25,14 @@ namespace m2
 			};
 			
 			template<typename ostrm>
-			decltype(auto) operator<<(ostrm &out,vector3 v)
+			decltype(auto) operator<<(ostrm &out,const vector3 &v3)
 			{
-				return out<<"x:"<<v.x<<",y:"<<v.y<<",z:"<<v.z;
+				union
+				{
+					vector3 v;
+					std::bitset<8*sizeof(vector3)> b;
+				}u{v3};
+				return out<<u.b;
 			}
 			
 			struct vector4
@@ -174,7 +180,7 @@ namespace m2
 		template<typename ostrm>
 		decltype(auto) operator<<(ostrm& os,const compbone &c)
 		{
-			if(c.key_bone_id==-1)
+/*			if(c.key_bone_id==-1)
 			{
 				if(c.parent_bone==-1)
 					os<<"independent bone";
@@ -184,7 +190,8 @@ namespace m2
 			else
 				os<<c.key_bone_id;
 			
-			return os<<"\tpivot("<<c.pivot<<")\t";
+			return os<<"\tpivot("<<c.pivot<<")\t";*/
+			return os<<c.key_bone_id<<' '<<c.parent_bone<<' '<<c.pivot;
 		}
 		
 		struct vertex
