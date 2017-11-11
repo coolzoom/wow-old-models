@@ -1,1 +1,0 @@
-SetConsoleKey("unbind")
