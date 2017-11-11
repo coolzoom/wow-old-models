@@ -1,7 +1,8 @@
 # wow old models
 
-This project is to bring back world of warcraft old models for draenei and night elves. Future support for blood elves since the model files of blood elves are broken.
+This project is to bring back world of warcraft old models for draenei, night elves.
 
+More support towards Blood elves old models since their files are broken.
 
 
 I could only provide files for enUS.
