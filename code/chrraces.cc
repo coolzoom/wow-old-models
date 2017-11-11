@@ -29,7 +29,7 @@ int main(int argc,char **argv)
 			if(flag&0x80)
 				std::cout<<" old models is now disabled\n";
 			else
-				std::cout<<" old models is now enabled\n";		
+				std::cout<<" old models is now enabled\n";
 		});
 		using namespace std::string_literals;
 		for(const auto &ele : args)
