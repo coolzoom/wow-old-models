@@ -14,7 +14,10 @@ namespace db2
 	template<typename ostrm>
 	decltype(auto) operator<<(ostrm& out,const chrraces& e)
 	{
-		return out<<e.m_flags;
+		out<<e.m_flags;
+		if(e.m_flags&0x80)
+			out<<" (Old models are disabled)";
+		return out;
 	}
 	using chrraces_file = wdb6_file<chrraces>;
 }

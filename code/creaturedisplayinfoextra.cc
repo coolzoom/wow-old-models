@@ -9,7 +9,7 @@ int main()
 	try
 	{
 		db2::creaturedisplayinfoextra_file cf("creaturedisplayinfoextra.db2");
-		std::ofstream fout("creaturedisplayinfoextra.txt",std::ofstream::binary);
+		std::ofstream fout("creaturedisplayinfoextra.txt");
 		auto rc(cf.records());
 		std::size_t counter(0);
 		using std::swap;
@@ -24,6 +24,7 @@ int main()
 			}
 		}
 		fout<<counter<<'\n';
+		std::cout<<"Log has been saved to creaturedisplayinfoextra.txt\n";
 	}
 	catch(const std::exception& ex)
 	{
