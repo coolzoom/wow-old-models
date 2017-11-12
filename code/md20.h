@@ -19,20 +19,21 @@ namespace m2
 			};
 			struct vector3
 			{
-				float x;
-				float y;
-				float z;
+//				float x;
+//				float y;
+//				float z;
+				std::uint32_t x,y,z;
 			};
 			
 			template<typename ostrm>
 			decltype(auto) operator<<(ostrm &out,const vector3 &v3)
 			{
-				union
+/*				union
 				{
 					vector3 v;
 					std::bitset<8*sizeof(vector3)> b;
-				}u{v3};
-				return out<<u.b;
+				}u{v3};*/
+				return out<<v3.x<<' '<<v3.y<<' '<<v3.z;
 			}
 			
 			struct vector4
@@ -227,7 +228,7 @@ namespace m2
 		template<typename ostrm>
 		decltype(auto) operator<<(ostrm& os,const attachment &c)
 		{
-			return os<<"id "<<c.id<<"\tbone "<<c.bone;
+			return os<<"id "<<c.id<<"\tbone "<<c.bone<<"\tpivot "<<c.position;
 		}
 		
 		struct event
@@ -385,6 +386,7 @@ namespace m2
 			float collision_sphere_radius;
 			iterator<std::uint16_t> collision_triangles;
 			iterator<common_types::vector3> collision_vertices;
+			iterator<common_types::vector3> collision_normals;
 			iterator<attachment> attachments;
 			
 			iterator<std::uint16_t> attachment_lookup_table;

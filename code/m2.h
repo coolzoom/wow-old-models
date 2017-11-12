@@ -134,7 +134,8 @@ namespace m2
 			{
 				case 0x3132444D:
 					return next_chunk();
-				throw std::runtime_error("Not a m2 file. The first block is not MD21. Which is "s+std::string(reinterpret_cast<std::uint8_t*>(m),reinterpret_cast<std::uint8_t*>(m)+1)+" ("s+std::to_string(*m)+')');
+				default:
+					throw std::runtime_error("Not a m2 file. The first block is not MD21. Which is "s+std::string(reinterpret_cast<std::uint8_t*>(m),reinterpret_cast<std::uint8_t*>(m+1))+" ("s+std::to_string(*m)+')');
 			}
 		}
 		
