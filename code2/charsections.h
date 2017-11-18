@@ -11,6 +11,8 @@ namespace db2
 		struct flag
 		{
 			std::uint16_t value;
+			flag() = default;
+			flag(const std::uint16_t &v):value(v){}
 			bool operator=(const flag& b) const
 			{
 				return value==b.value;
@@ -107,6 +109,13 @@ namespace db2
 		charsections_details::sex sex;
 		charsections_details::field field;
 		std::array<std::uint8_t,3> c;
+		charsections() = default;
+		charsections(const std::uint32_t& t1,const std::uint32_t& t2,const std::uint32_t& t3,
+					const charsections_details::flag &f,
+					const db2::race &r,const charsections_details::sex &s,
+					const charsections_details::field &fd,
+					const std::uint8_t &c1,const std::uint8_t &c2,const std::uint8_t &c3)
+						:textures{t1,t2,t3},flag(f),race(r),sex(s),field(fd),c{c1,c2,c3}{}
 	};	
 	
 	template<typename ostrm>
