@@ -33,7 +33,16 @@ namespace m2
 					vector3 v;
 					std::bitset<8*sizeof(vector3)> b;
 				}u{v3};*/
-				return out<<v3.x<<' '<<v3.y<<' '<<v3.z;
+				struct b
+				{
+					float x,y,z;
+				};
+				union
+				{
+					vector3 v1;
+					b v;
+				}u{v3};
+				return out<<u.v.x<<","<<u.v.y<<","<<u.v.z<<" {"<<v3.x<<","<<v3.y<<","<<v3.z<<"}";
 			}
 			
 			struct vector4
@@ -209,6 +218,11 @@ namespace m2
 			std::uint32_t flags;
 			iterator<char> filename;
 		};
+		template<typename ostrm>
+		decltype(auto) operator<<(ostrm& os,const texture &c)
+		{
+			return os<<"type:"<<c.type<<"\tflag:"<<c.flags;
+		}
 		
 		struct material
 		{
@@ -457,6 +471,19 @@ namespace m2
 			if(i.offset_elements+i.number*sizeof(T)<size())
 				return operator[](i);
 			throw std::out_of_range("md20 iterator out of range");
+		}
+		
+		void set_attachment_position(std::size_t pos,const md20::common_types::vector3& v)
+		{
+			decltype(auto) bones(at(hd->bones));
+			decltype(auto) attachments(at(hd->attachments));
+			std::size_t i(0);
+			for(;i!=attachments.size();++i)
+				if(attachments[i].id==pos)
+					break;
+			if(i==attachments.size())
+				throw std::runtime_error("no this attachment in the model file");
+			bones.at(attachments.at(i).bone).pivot=attachments.at(i).position=v;
 		}
 	};
 	
