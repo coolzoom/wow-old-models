@@ -1,0 +1,3 @@
+creaturedisplayinfoextra
+chrraces
+pause
