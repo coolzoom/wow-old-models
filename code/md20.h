@@ -155,10 +155,81 @@ namespace m2
 			track<common_types::vector4> rotation;
 			track<common_types::vector3> scaling;
 		};
+		enum class keybone:std::int32_t
+		{
+			larm,rarm,lshoulder,rshoulder,spinelow,waist,head,jaw,rfingerindex,rfingermiddle,rfingerpinky,rfingerring,rfingerthumb,lfingerindex,lfingermiddle,lfingerpinky,lfingerring,lfingerthumb,bth,csr,csl,breath,name,namemount,chd,cch,root,
+			not_exist = -1,
+		};
 		
+		template<typename ostrm>
+		decltype(auto) operator<<(ostrm& os,const keybone &c)
+		{
+			os<<std::int32_t(c);
+			switch(c)
+			{
+				case keybone::larm:
+					return os<<"(left arm)";
+				case keybone::rarm:
+					return os<<"(right arm)";
+				case keybone::lshoulder:
+					return os<<"(left shoulder)";
+				case keybone::rshoulder:
+					return os<<"(right shoulder)";
+				case keybone::spinelow:
+					return os<<"(spine low)";
+				case keybone::waist:
+					return os<<"(waist)";
+				case keybone::head:
+					return os<<"(head)";
+				case keybone::jaw:
+					return os<<"(jaw)";
+				case keybone::rfingerindex:
+					return os<<"(right finger index)";
+				case keybone::rfingermiddle:
+					return os<<"(right finger middle)";
+				case keybone::rfingerpinky:
+					return os<<"(right finger pinky)";
+				case keybone::rfingerring:
+					return os<<"(right finger ring)";
+				case keybone::rfingerthumb:
+					return os<<"(right finger thumb)";
+				case keybone::lfingerindex:
+					return os<<"(left finger index)";
+				case keybone::lfingermiddle:
+					return os<<"(left finger middle)";
+				case keybone::lfingerpinky:
+					return os<<"(left finger pinky)";
+				case keybone::lfingerring:
+					return os<<"(left finger ring)";
+				case keybone::lfingerthumb:
+					return os<<"(left finger thumb)";
+				case keybone::bth:
+					return os<<"(bth)";
+				case keybone::csr:
+					return os<<"(csr)";
+				case keybone::csl:
+					return os<<"(csl)";
+				case keybone::breath:
+					return os<<"(breath)";
+				case keybone::name:
+					return os<<"(name)";
+				case keybone::namemount:
+					return os<<"(name mount)";
+				case keybone::chd:
+					return os<<"(chd)";
+				case keybone::cch:
+					return os<<"(cch)";
+				case keybone::root:
+					return os<<"(root)";
+				case keybone::not_exist:
+					return os<<"(not exist)";
+				default:
+					return os<<"(unknown)";
+			}
+		}
 		struct compbone
 		{
-			std::int32_t key_bone_id;
+			keybone key_bone_id;
 			enum
 			{
 				spherical_billboard = 0x8,
@@ -187,21 +258,23 @@ namespace m2
 			common_types::vector3 pivot;
 		};
 		
+
+		
 		template<typename ostrm>
 		decltype(auto) operator<<(ostrm& os,const compbone &c)
 		{
-/*			if(c.key_bone_id==-1)
+			if(c.key_bone_id==keybone::not_exist)
 			{
 				if(c.parent_bone==-1)
 					os<<"independent bone";
 				else
-					os<<"parent bone is "<<c.parent_bone;
+					os<<"->"<<c.parent_bone;
 			}
 			else
 				os<<c.key_bone_id;
 			
-			return os<<"\tpivot("<<c.pivot<<")\t";*/
-			return os<<c.key_bone_id<<' '<<c.parent_bone<<' '<<c.pivot;
+			return os<<"\tpivot("<<c.pivot<<")";
+//			return os<<c.key_bone_id<<' '<<c.parent_bone<<' '<<c.pivot;
 		}
 		
 		struct vertex
@@ -211,25 +284,26 @@ namespace m2
 			common_types::vector3 normal;
 			std::array<common_types::vector2,2> tex_coords;
 		};
-		
+
 		struct texture
 		{
 			std::uint32_t type;
 			std::uint32_t flags;
 			iterator<char> filename;
 		};
+
 		template<typename ostrm>
 		decltype(auto) operator<<(ostrm& os,const texture &c)
 		{
 			return os<<"type:"<<c.type<<"\tflag:"<<c.flags;
 		}
-		
+
 		struct material
 		{
 			std::uint16_t flags;
 			std::uint16_t blending_mode;
 		};
-		
+
 		struct attachment
 		{
 			std::uint32_t id;
@@ -238,13 +312,13 @@ namespace m2
 			common_types::vector3 position;
 			track<std::uint8_t> animate_attached;
 		};
-		
+
 		template<typename ostrm>
 		decltype(auto) operator<<(ostrm& os,const attachment &c)
 		{
 			return os<<"id "<<c.id<<"\tbone "<<c.bone<<"\tpivot "<<c.position;
 		}
-		
+
 		struct event
 		{
 			union
@@ -257,7 +331,7 @@ namespace m2
 			common_types::vector3 position;
 			track_base enabled;
 		};
-		
+
 		struct camera
 		{
 			std::uint32_t type;
@@ -268,7 +342,7 @@ namespace m2
 			track<spline_key<float>> roll;
 			track<spline_key<float>> fov;
 		};
-		
+
 		struct light
 		{
 			std::uint16_t type;
@@ -282,7 +356,7 @@ namespace m2
 			track<float> attenuation_end;
 			track<std::uint8_t> visibility;
 		};
-		
+
 		struct ribbon
 		{
 			std::uint32_t id;
@@ -304,7 +378,7 @@ namespace m2
 			std::int16_t priority_plane;
 			std::uint16_t padding;
 		};
-		
+
 		class version
 		{
 			std::uint32_t v;
@@ -357,7 +431,7 @@ namespace m2
 				std::uint32_t : 1;
 				std::uint32_t flag_load_phys_data : 1;
 				std::uint32_t : 1;
-				std::uint32_t flag_unk_0x80: 1;  
+				std::uint32_t flag_demon_hunter_tatto_glowing: 1;  
 				std::uint32_t flag_camera_related: 1;
 				std::uint32_t flag_new_particle_record: 1;
 				std::uint32_t flag_unk_0x400 : 1;
@@ -373,12 +447,12 @@ namespace m2
 				std::uint32_t flag_unk_0x100000: 1;
 				std::uint32_t flag_unk_0x200000: 1;// apparently: use 24500 upgraded model format: chunked .anim files, change in the exporter reordering sequence+bone blocks before name
 			}flags;
-			
+
 			iterator<loop> loops;
 			iterator<sequence> sequences;
 			iterator<std::uint16_t> sequences_lookups;
 			iterator<compbone> bones;
-			iterator<std::uint16_t> key_bone_lookups;
+			iterator<std::int16_t> key_bone_lookups;
 			iterator<vertex> vertices;
 			std::uint32_t num_skin_profiles;
 			iterator<color> colors;
@@ -387,13 +461,13 @@ namespace m2
 			iterator<texture_transform> texture_transforms;
 			iterator<std::uint16_t> replacable_texture_lookup;
 			iterator<material> materials;
-			
+
 			iterator<std::uint16_t> bone_lookup_table;
 			iterator<std::uint16_t> texture_lookup_table;
 			iterator<std::uint16_t> tex_unit_lookup_table;
 			iterator<std::uint16_t> transparency_lookup_table;
 			iterator<std::uint16_t> texture_transforms_lookup_table;
-			
+
 			common_types::aa_box bounding_box;
 			float bounding_sphere_radius;
 			common_types::aa_box collision_box;
@@ -402,7 +476,7 @@ namespace m2
 			iterator<common_types::vector3> collision_vertices;
 			iterator<common_types::vector3> collision_normals;
 			iterator<attachment> attachments;
-			
+
 			iterator<std::uint16_t> attachment_lookup_table;
 			iterator<event> events;
 			iterator<light> lights;
@@ -412,12 +486,14 @@ namespace m2
 			iterator<void> particle_emitters;
 		};
 	}
-	
+
+	struct md20_magic_tag_t{}md20_magic_tag;
 	
 	class md21
 	{
 		span<std::uint8_t> m;
 		md20::header *hd;
+		bool md20_tg=false;
 	public:
 		md21(const span<std::uint8_t> &s):m(s)
 		{
@@ -431,7 +507,22 @@ namespace m2
 					std::uint32_t u;
 					std::array<char,4> a;
 				}mg{hd->magic};
-				throw std::runtime_error("not a md20 block : "s+std::to_string(mg.u)+"\t"+std::string(mg.a.begin(),mg.a.end()));
+				throw std::runtime_error("not a md20 block : "s+std::to_string(mg.u)+'\t'+std::string(mg.a.begin(),mg.a.end()));
+			}
+		}
+		md21(md20_magic_tag_t,const span<std::uint8_t> &s):m(s.begin()-4,s.end()),md20_tg(true)
+		{
+			using namespace std::string_literals;
+			parser p(m.begin(),m.end());
+			hd = p.at<md20::header>();
+			if(hd->magic!=0x3032444D)
+			{
+				union
+				{
+					std::uint32_t u;
+					std::array<char,4> a;
+				}mg{hd->magic};
+				throw std::runtime_error("not a md20 block : "s+std::to_string(mg.u)+'\t'+std::string(mg.a.begin(),mg.a.end()));
 			}
 		}
 		
@@ -473,6 +564,11 @@ namespace m2
 			throw std::out_of_range("md20 iterator out of range");
 		}
 		
+		bool is_md20() const
+		{
+			return md20_tg;
+		}
+		
 		void set_attachment_position(std::size_t pos,const md20::common_types::vector3& v)
 		{
 			decltype(auto) bones(at(hd->bones));
@@ -490,14 +586,18 @@ namespace m2
 	template<typename ostrm>
 	decltype(auto) operator<<(ostrm& os,const md21& v)
 	{
-		os<<"MD21\t"<<v.size()<<" bytes\t"<<v.head().vers<<'\t';
+		if(v.is_md20())
+			os<<"MD20\t";
+		else
+			os<<"MD21\t";
+		os<<v.size()<<" bytes\t"<<v.head().vers<<'\t';
 		auto s(v.at(v.head().name));
 		if(s.back())
 			os.rdbuf()->sputn(s.data(),s.size());
 		else
 			os<<s.data();
 		if(v.head().flags.flag_unk_0x200000)
-			os<<'\t'<<"(24500 upgraded model format)";
+			os<<"\t(24500 upgraded model format)";
 		return (os);
 	}
 	

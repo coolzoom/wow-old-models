@@ -2,12 +2,13 @@
 #include<exception>
 #include<stdexcept>
 #include<iostream>
+#include<vector>
 
 template<typename T>
 void output(const T& c)
 {
 	for(std::size_t i(0);i!=c.size();++i)
-		std::cout<<i<<' '<<c[i]<<'\n';
+		std::cout<<i<<':'<<c[i]<<'\n';
 }
 
 int main(int argc,char **argv)
@@ -22,20 +23,30 @@ int main(int argc,char **argv)
 			return 1;
 		}
 		const m2::m2 p(argv[1]);
-//		std::cout<<p<<'\n';
-		decltype(auto) md21(p.get<m2::md21>());
-		decltype(auto) m(md21.at(md21.head().bones));
+		std::cout<<p<<'\n';
+/*		decltype(auto) md21(p.get<m2::md21>());
+		std::cout<<"sequences\n";
+		output(md21.at(md21.head().sequences));
 		
+		std::cout<<"sequences lookups\n";
+		output(md21.at(md21.head().sequences_lookups));
+		std::cout<<"key bone lookups\n";
+		output(md21.at(md21.head().key_bone_lookups));
+
 		std::cout<<"bones\n";
-		output(m);
+		output(md21.at(md21.head().bones));
+		
+
+		
 		decltype(auto) attc(md21.at(md21.head().attachments));		
 		std::cout<<"attachments\n";
-		output(attc);
-//		m2::md20::vector3
+		output(attc);*/
 		
-		decltype(auto) attclup(md21.at(md21.head().attachment_lookup_table));		
-		std::cout<<"attachments look up\n";
-		output(attclup);
+/*		decltype(auto) attclup(md21.at(md21.head().attachment_lookup_table));		
+		std::cout<<"attachments lookups\n";
+		output(attclup);*/
+		
+		
 //		for(std::size_t i(0);i!=attc.size();++i)
 //			std::cout<<i<<' '<<attc[i]<<'\n';
 	}

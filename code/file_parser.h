@@ -44,6 +44,13 @@ struct parser
 		return next_n<T>(n);
 	}
 	
+	auto remain()
+	{
+		const auto ptr(iptr);
+		iptr = end;
+		return span<std::uint8_t>(ptr,end);		
+	}
+	
 	void clear() noexcept
 	{
 		iptr=end=nullptr;
@@ -86,6 +93,11 @@ public:
 	{
 		return p.at_n<T>(n);
 	}
+	auto remain()
+	{
+		return p.remain();		
+	}
+		
 	void clear() noexcept
 	{
 		p.clear();

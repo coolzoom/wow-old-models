@@ -1,3 +1,2 @@
-creaturedisplayinfoextra
 chrraces
 pause

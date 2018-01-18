@@ -423,36 +423,13 @@ namespace m2
 						return os<<"Unknown Expansion ("<<val<<')';
 			}
 		}
+		
 		struct header
 		{
 			std::uint32_t magic;
 			version vers;
 			iterator<char> name;
-			struct
-			{
-				std::uint32_t flag_tilt_x: 1;
-				std::uint32_t flag_tilt_y: 1;
-				std::uint32_t : 1;
-				std::uint32_t flag_use_texture_combiner_combos: 1;
-				std::uint32_t : 1;
-				std::uint32_t flag_load_phys_data : 1;
-				std::uint32_t : 1;
-				std::uint32_t flag_demon_hunter_tatto_glowing: 1;  
-				std::uint32_t flag_camera_related: 1;
-				std::uint32_t flag_new_particle_record: 1;
-				std::uint32_t flag_unk_0x400 : 1;
-				std::uint32_t flag_texture_transforms_use_bone_sequences: 1;
-				std::uint32_t flag_unk_0x1000: 1;
-				std::uint32_t flag_unk_0x2000: 1;
-				std::uint32_t flag_unk_0x4000: 1;
-				std::uint32_t flag_unk_0x8000: 1;
-				std::uint32_t flag_unk_0x10000: 1;
-				std::uint32_t flag_unk_0x20000: 1;
-				std::uint32_t flag_unk_0x40000: 1;
-				std::uint32_t flag_unk_0x80000: 1;
-				std::uint32_t flag_unk_0x100000: 1;
-				std::uint32_t flag_unk_0x200000: 1;// apparently: use 24500 upgraded model format: chunked .anim files, change in the exporter reordering sequence+bone blocks before name
-			}flags;
+
 
 			iterator<loop> loops;
 			iterator<sequence> sequences;

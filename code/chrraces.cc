@@ -36,6 +36,8 @@ int main(int argc,char **argv)
 		{
 			if(ele=="ne"s||ele=="nightelf"s)
 				set_flag(3,"Night elf"s);
+			else if(ele=="tauren"s)
+				set_flag(6,"Tauren"s);
 			else if(ele=="draenei"s)
 				set_flag(10,"Draenei"s);
 			else if(ele=="be"s||ele=="bloodelf"s)
@@ -48,6 +50,9 @@ int main(int argc,char **argv)
 			{
 				case 3:
 					fout<<"(Night elf)";
+				break;
+				case 6:
+					fout<<"(Tauren)";
 				break;
 				case 9:
 					fout<<"(Blood elf)";

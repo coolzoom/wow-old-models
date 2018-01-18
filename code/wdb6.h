@@ -13,7 +13,7 @@ namespace db2
 	template<typename ostrm>
 	decltype(auto) operator<<(ostrm& o,const field_structure& fs)
 	{
-		return o<<"size\t"<<fs.size<<"\nposition\t"<<fs.position;
+		return o<<"size:"<<fs.size<<"\tposition:"<<fs.position;
 	}
 	
 	template<typename record_type>
