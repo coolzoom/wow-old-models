@@ -1,36 +1,30 @@
 # wow old models
 
-This project is to bring back world of warcraft old models for draenei, night elves.
+This project is to bring back world of warcraft old models.
 
-More support towards Blood elves old models since their files are broken.
+Watch my video : https://www.youtube.com/watch?v=IPJRbemPi9o
+https://youtu.be/q_uj7mi97tM
+
+human : wdc3 hum
+dwarf: wdc3 dwarf
+ne: wdc3 ne
+gnome: wdc3 gnome
+troll: wdc3 troll
+be: wdc3 be
+draenei: wdc3 draenei
+
+Enable multiple races: For example human + ne:
+wdc3 hum ne
 
 
-I could only provide files for enUS.
-
-
-For other clients, you need use cascviewer to extract dbfilesclient/creaturedisplayinfoextra.db2 and dbfilesclient/chrraces.db2. Use creaturedisplayinfoextra.exe and chrraces.exe to modify them.
-
-
-cascview-64
-
+You need download
+1. My addon ControlPanel
+https://wow.curseforge.com/projects/c...
+2. Cascview or CascExplorer
 http://www.zezula.net/en/casc/main.html
-
-listfile
-
-https://github.com/bloerwald/LegionFiles
-
-
-Need to compile source code?
-Use mingw-64 (recommend for using https://gcc-mcf.lhmouse.com/ or https://nuwen.net/mingw.html) or Visual studio (require boost library http://www.boost.org/) to compile my C++ code to change them.
-
-For gcc:
-
-g++ -o creaturedisplayinfoextra creaturedisplayinfoextra.cc -O2
-
-g++ -o chrraces chrraces.cc -O2
-
-For visual studio
-
-cl -EHsc -Ox creaturedisplayinfoextra.cc
-
-cl -EHsc -Ox chrraces.cc
+3. Listfile
+https://github.com/wowdev/wow-listfile
+4. This wow old models project
+https://bitbucket.org/ejsvifq_mabmip/...
+5. Arctium WoW Launcher
+https://arctium.io
