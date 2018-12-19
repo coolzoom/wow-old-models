@@ -2,6 +2,11 @@
 
 This project is to bring back world of warcraft old models.
 
+QQ群: 659993107
+
+Discord: https://discord.gg/GDVHcpb
+
+
 NGA精英死妈
 https://youtu.be/knaY9iuFzTs
 
